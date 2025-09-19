@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Safemood\Discountify;
 
-use Illuminate\Contracts\Foundation\Application;
 use Safemood\Discountify\Commands\ConditionMakeCommand;
+use Safemood\Discountify\Contracts\CouponManagerInterface;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -33,14 +33,18 @@ class DiscountifyServiceProvider extends PackageServiceProvider
             return $conditionManager;
         });
 
-        $this->app->singleton(CouponManager::class, function () {
-            return new CouponManager;
+        $this->app->singleton(CouponManagerInterface::class, function (\Illuminate\Foundation\Application $app) {
+            $couponManager = $app->config->get('discountify.coupon_manager_class');
+
+            return new $couponManager;
         });
 
-        $this->app->singleton(Discountify::class, function (Application $app) {
+        $this->app->singleton(Discountify::class, function (\Illuminate\Foundation\Application $app) {
+            $couponManager = $app->config->get('discountify.coupon_manager_class');
+
             return new Discountify(
                 $app->make(ConditionManager::class),
-                $app->make(CouponManager::class)
+                $app->make($couponManager)
             );
         });
     }

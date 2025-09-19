@@ -8,6 +8,8 @@ use Safemood\Discountify\Concerns\HasCalculations;
 use Safemood\Discountify\Concerns\HasConditions;
 use Safemood\Discountify\Concerns\HasCoupons;
 use Safemood\Discountify\Concerns\HasDynamicFields;
+use Safemood\Discountify\Contracts\ConditionManagerInterface;
+use Safemood\Discountify\Contracts\CouponManagerInterface;
 use Safemood\Discountify\Contracts\DiscountifyInterface;
 use Safemood\Discountify\Events\DiscountAppliedEvent;
 
@@ -15,18 +17,7 @@ use Safemood\Discountify\Events\DiscountAppliedEvent;
  * Class Discountify
  *
  * @method array getConditions()
- * @method ConditionManager conditions()
- * @method float getGlobalTaxRate()
- * @method float getGlobalDiscount()
- * @method array getItems()
- * @method float subtotal()
- * @method float tax()
- * @method float taxAmount(bool $afterDiscount = false)
- * @method float total()
- * @method float totalWithDiscount(?float $globalDiscount = null)
- * @method self discount(float $globalDiscount)
  * @method self setFields(array $fields)
- * @method CouponManager coupons()
  * @method self addCoupon(array $coupon)
  * @method self removeCoupon(string $code)
  * @method self applyCoupon(string $code, int|string $userId = null)
@@ -44,7 +35,7 @@ class Discountify implements DiscountifyInterface
     use HasDynamicFields;
 
     /**
-     * @var array<mixed> The items in the cart.
+     * @var array The items in the cart.
      */
     protected array $items = [];
 
@@ -62,8 +53,8 @@ class Discountify implements DiscountifyInterface
      * Discountify constructor.
      */
     public function __construct(
-        protected ConditionManager $conditionManager,
-        protected CouponManager $couponManager
+        protected ConditionManagerInterface $conditionManager,
+        protected CouponManagerInterface $couponManager
     ) {
         $this->setGlobalDiscount(config('discountify.global_discount'));
         $this->setGlobalTaxRate(config('discountify.global_tax_rate'));
@@ -115,9 +106,9 @@ class Discountify implements DiscountifyInterface
     }
 
     /**
-     * Get the CouponManager instance.
+     * Get the CouponManagerInterface instance.
      */
-    public function coupons(): CouponManager
+    public function coupons(): CouponManagerInterface
     {
         return $this->couponManager;
     }
@@ -145,7 +136,7 @@ class Discountify implements DiscountifyInterface
     /**
      * Get the items in the cart.
      *
-     * @return array<mixed> The items in the cart.
+     * @return array The items in the cart.
      */
     public function getItems(): array
     {
@@ -167,9 +158,9 @@ class Discountify implements DiscountifyInterface
     /**
      * Set the CouponManager instance.
      *
-     * @param  CouponManager  $couponManager  The CouponManager instance to set.
+     * @param  CouponManagerInterface  $couponManager  The CouponManager instance to set.
      */
-    public function setCouponManager(CouponManager $couponManager): self
+    public function setCouponManager(CouponManagerInterface $couponManager): self
     {
         $this->couponManager = $couponManager;
 
@@ -203,7 +194,7 @@ class Discountify implements DiscountifyInterface
     /**
      * Set the items in the cart.
      *
-     * @param  array<mixed>  $items  The items to set in the cart.
+     * @param  array  $items  The items to set in the cart.
      */
     public function setItems(array $items): self
     {

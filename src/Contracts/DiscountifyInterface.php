@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Safemood\Discountify\Contracts;
 
 use Safemood\Discountify\ConditionManager;
-use Safemood\Discountify\CouponManager;
 
 interface DiscountifyInterface
 {
@@ -15,7 +14,7 @@ interface DiscountifyInterface
 
     public function conditions(): ConditionManager;
 
-    public function coupons(): CouponManager;
+    public function coupons(): CouponManagerInterface;
 
     public function getGlobalDiscount(): float;
 
@@ -25,7 +24,7 @@ interface DiscountifyInterface
 
     public function setConditionManager(ConditionManager $conditionManager): self;
 
-    public function setCouponManager(CouponManager $couponManager): self;
+    public function setCouponManager(CouponManagerInterface $couponManager): self;
 
     public function setGlobalDiscount(float $globalDiscount): self;
 

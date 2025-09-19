@@ -70,9 +70,9 @@ class ConditionManager implements ConditionManagerInterface
      *
      * @return $this
      */
-    public function defineIf(string $slug, bool $isAcceptable, float $discount): self
+    public function defineIf(string $slug, bool $condition, float $discount): self
     {
-        return $this->define($slug, fn () => $isAcceptable, $discount);
+        return $this->define($slug, fn () => $condition, $discount);
     }
 
     /**
