@@ -126,7 +126,7 @@ trait HasCalculations
     {
         $fixedPrice = $this->discountPrice();
 
-        return $this->calculateTotalWithTaxes() * ($this->discountRate($globalDiscount) / 100);
+        return $this->calculateTotalWithTaxes() * ($this->discountRate($globalDiscount) / 100) + $fixedPrice;
     }
 
     /**
