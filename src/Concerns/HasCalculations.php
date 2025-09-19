@@ -57,6 +57,11 @@ trait HasCalculations
         return min($totalDiscountRate, 100);
     }
 
+    public function discountPrice(): float
+    {
+        return $this->couponManager->couponPriceDiscount();
+    }
+
     /**
      * Calculate the global tax amount.
      *
@@ -119,6 +124,8 @@ trait HasCalculations
      */
     public function calculateSavings(?float $globalDiscount = null): float
     {
+        $fixedPrice = $this->discountPrice();
+
         return $this->calculateTotalWithTaxes() * ($this->discountRate($globalDiscount) / 100);
     }
 
@@ -131,8 +138,9 @@ trait HasCalculations
     public function calculateTotalAfterDiscount(?float $globalDiscount = null): float
     {
         $subTotal = $this->calculateSubtotal();
+        $fixedPrice = $this->discountPrice();
 
-        return $subTotal - ($subTotal * ($this->discountRate($globalDiscount) / 100));
+        return $subTotal - ($subTotal * ($this->discountRate($globalDiscount) / 100)) - $fixedPrice;
     }
 
     /**
@@ -144,7 +152,11 @@ trait HasCalculations
     {
         $total = $this->calculateTotalWithTaxes();
         $discountRate = $this->discountRate();
-        $discountedTotal = $total * (1 - $discountRate / 100);
+        $fixedPrice = $this->discountPrice();
+
+        $discountedTotal = ($total * (1 - $discountRate / 100)) - $fixedPrice;
+
+        $discountedTotal = min($discountedTotal, $total);
 
         return max(0, $discountedTotal);
     }
@@ -164,6 +176,7 @@ trait HasCalculations
             'savings' => round($this->calculateSavings(), 3),
             'tax_rate' => $this->getGlobalTaxRate(),
             'discount_rate' => $this->discountRate(),
+            'discount_fixed_price' => $this->discountPrice(),
         ];
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Safemood\Discountify\Concerns;
 
+use Safemood\Discountify\Discountify;
+
 /**
  * Trait HasCoupons
  *
@@ -15,7 +17,7 @@ trait HasCoupons
      * Add a coupon to the manager.
      *
      * @param  array  $coupon  The coupon data.
-     * @return $this
+     * @return Discountify|HasCoupons
      */
     public function addCoupon(array $coupon): self
     {
@@ -28,7 +30,7 @@ trait HasCoupons
      * Remove a coupon from the manager.
      *
      * @param  string  $code  The code of the coupon to remove.
-     * @return $this
+     * @return Discountify|HasCoupons
      */
     public function removeCoupon(string $code): self
     {
@@ -42,7 +44,7 @@ trait HasCoupons
      *
      * @param  string  $code  The code of the coupon to apply.
      * @param  int|string|null  $userId  Optional. The ID of the user to whom the coupon applies.
-     * @return $this
+     * @return Discountify|HasCoupons
      */
     public function applyCoupon(string $code, int|string|null $userId = null): self
     {
@@ -63,7 +65,7 @@ trait HasCoupons
     }
 
     /**
-     * Get the total discount applied by coupons.
+     * Get the total discount percent applied by coupons.
      *
      * @return float The total discount applied by coupons.
      */
@@ -73,9 +75,19 @@ trait HasCoupons
     }
 
     /**
+     * Get the total discount fixed-price applied by coupons.
+     *
+     * @return float The total discount applied by coupons.
+     */
+    public function couponPriceDiscount(): float
+    {
+        return $this->coupons()->couponPriceDiscount();
+    }
+
+    /**
      * Remove an applied coupon from the list of applied coupons.
      *
-     * @return $this
+     * @return Discountify|HasCoupons
      */
     public function removeAppliedCoupons(): self
     {
@@ -87,7 +99,7 @@ trait HasCoupons
     /**
      * Clear all applied coupons.
      *
-     * @return $this
+     * @return Discountify|HasCoupons
      */
     public function clearAppliedCoupons(): self
     {
@@ -109,7 +121,7 @@ trait HasCoupons
     /**
      * Clear all coupons.
      *
-     * @return $this
+     * @return Discountify|HasCoupons
      */
     public function clearCoupons(): self
     {

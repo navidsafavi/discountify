@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Safemood\Discountify;
 
 use Safemood\Discountify\Concerns\HasStateTracking;
+use Safemood\Discountify\Contracts\CouponManagerInterface;
+use Safemood\Discountify\Enums\CouponType;
 use Safemood\Discountify\Events\CouponAppliedEvent;
 use Safemood\Discountify\Exceptions\DuplicateCouponException;
 
@@ -12,17 +14,16 @@ use Safemood\Discountify\Exceptions\DuplicateCouponException;
  * Class CouponManager
  * Manages coupons for discounts.
  */
-class CouponManager
+class CouponManager extends BaseCouponManager implements CouponManagerInterface
 {
     use HasStateTracking;
-
-    protected array $coupons = [];
 
     public function __construct()
     {
         $this->stateFilePath = config('discountify.state_file_path');
         $this->ensureStateFileExists();
         $this->loadState();
+        $this->couponType = CouponType::PERCENT;
     }
 
     /**
@@ -87,6 +88,16 @@ class CouponManager
     {
         return collect($this->appliedCoupons())
             ->sum(fn (array $coupon) => $coupon['discount']);
+    }
+
+    /**
+     * Get the total discount fixed-price applied by coupons.
+     *
+     * @return float The total discount prices applied.
+     */
+    public function couponPriceDiscount(): float
+    {
+        return 0;
     }
 
     /**
@@ -354,5 +365,10 @@ class CouponManager
     protected function isUserAllowedToUseCoupon(array $coupon, int|string $userId): bool
     {
         return isset($coupon['userIds']) && in_array($userId, $coupon['userIds'], true);
+    }
+
+    public function getCouponType(): CouponType
+    {
+        return $this->couponType;
     }
 }

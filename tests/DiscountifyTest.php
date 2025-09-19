@@ -343,6 +343,7 @@ it('can work correctly with class-based conditions', function () {
         'savings' => 23.80,
         'tax_rate' => 19.0,
         'discount_rate' => 10.0,
+        'discount_fixed_price' => 0.0,
     ];
 
     Condition::discover(
@@ -810,6 +811,7 @@ it('applies a limited usage coupon', function () {
         'savings' => 50.00,
         'tax_rate' => 0.0,
         'discount_rate' => 25.0,
+        'discount_fixed_price' => 0.0,
     ];
 
     Coupon::add([
@@ -837,6 +839,7 @@ it('calculates total with discount applied during the early spring sale period',
         'savings' => 13.5,
         'tax_rate' => 0.0,
         'discount_rate' => 15.0,
+        'discount_fixed_price' => 0.0,
     ];
 
     Carbon::setTestNow(Carbon::create(2024, 3, 10)); // date within the early spring sale period
@@ -887,6 +890,7 @@ it('calculates total without discount applied outside the early spring sale peri
         'savings' => 0.0,
         'tax_rate' => 0.0,
         'discount_rate' => 0.0,
+        'discount_fixed_price' => 0.0,
     ];
 
     Carbon::setTestNow(Carbon::create(2024, 2, 15)); // date outside the early spring sale period
@@ -1010,6 +1014,7 @@ it('calculates total amount correctly with large quantities and high tax rate', 
         'savings' => 6_000_000.00,
         'tax_rate' => 100.00,
         'discount_rate' => 10.0,
+        'discount_fixed_price' => 0.0,
     ];
 
     $items = [
@@ -1046,6 +1051,7 @@ it('calculates total amount correctly with varying item prices and discounts', f
         'savings' => 20.125,
         'tax_rate' => 15.0,
         'discount_rate' => 25.0,
+        'discount_fixed_price' => 0.0,
     ];
 
     $items = [
@@ -1083,6 +1089,7 @@ it('calculates total amount correctly with single high-priced item', function ()
         'savings' => 242.00,
         'tax_rate' => 10.0,
         'discount_rate' => 22.0,
+        'discount_fixed_price' => 0.0,
     ];
 
     $items = [
@@ -1112,6 +1119,7 @@ it('calculates total amount correctly with various item quantities and discounts
         'savings' => 19.44,
         'tax_rate' => 8.0,
         'discount_rate' => 15.0,
+        'discount_fixed_price' => 0.0,
     ];
 
     $items = [
